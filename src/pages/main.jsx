@@ -1,35 +1,38 @@
 import {observer} from "mobx-react-lite";
-import Player from '../components/Player'
-import {BrowserRouter} from "react-router-dom";
-import Navbar from "./Navbar";
-import AppRouter from "../components/AppRouter";
 import '../App.css'
 import {exportMyOrders} from "../getMyOrders";
-import {Col, Row, Card} from 'react-bootstrap'
 import MainItem from './MainItem'
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
+import {boolean} from "yup";
+import Nav from "react-bootstrap/Nav";
+
 
 const OffcanvasExample = observer(() => {
-    const [orders, setOrders] = useState([]);
-
-    useEffect(() => {
-        exportMyOrders().then((result) => {
-            console.log(result);
-            setOrders(result);
-        });
-    }, []);
+    // const [news, setNews] = useState([]);
+    // const [newsEmpty, setNewsEmpty] = useState("");
+    //
+    // useEffect(() => {
+    //     let NewsArray = exportMyOrders()
+    //     NewsArray.then(result => {
+    //         setNewsEmpty(result)
+    //     })
+    //
+    //     if(newsEmpty === "Пусто"){
+    //         console.log("!@#!@#!@#");
+    //         setNewsEmpty("Пусто");
+    //     } else {
+    //         console.log("23213123123123");
+    //         setNewsEmpty("Есть");
+    //         NewsArray.then((result) => {
+    //             setNews(result);
+    //         });
+    //     }
+    // }, []);
 
     return (
-        <Row>
-            {orders.map((nevs, index) => (
-                <MainItem key={index} nevs={nevs} />
-            ))}
-            <div>
-                <p>
-                    dsadas
-                </p>
-            </div>
-        </Row>
+        <div>
+           test
+        </div>
     );
 });
 

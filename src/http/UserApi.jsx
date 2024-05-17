@@ -32,6 +32,15 @@ export const getName = async (token) => {
     }
 }
 
+export const getEmail = async (token) => {
+    try{
+        const {data} = await $host.post('api/getEmail', {token});
+        return data;
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 export const getId = async (token) => {
     try{
         const {data} = await $host.post('api/getId', {token});
@@ -49,4 +58,16 @@ export const getRole= async (token) => {
         console.log(e)
     }
     return null;
+}
+
+export const getAllUsers = async () => {
+    try {
+        let data = fetch('http://localhost:8080/api/allUsers', {
+            method: "GET"
+        })
+
+        return data
+    } catch (e) {
+        console.log(e)
+    }
 }

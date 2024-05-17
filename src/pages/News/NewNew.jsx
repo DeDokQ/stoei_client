@@ -1,13 +1,11 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import './order.css'
-import {Box, colors} from "@mui/material";
 import {Button} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
-import {addOrder} from "../../http/OrderApi";
-import {getId, getName} from "../../http/UserApi";
+import {addNew, addOrder} from "../../http/OrderApi";
 
 const isAuthenticated = () => {
-    if (localStorage.getItem("token")) {
+    if (localStorage.getItem("role") === "ADMIN") {
         return true;
     }
     return false;
@@ -15,6 +13,7 @@ const isAuthenticated = () => {
 
 const App = observer(() => {
 
+    if (isAuthenticated()) {
         const [formValues, setFormValues] = useState([
             {
                 title: "", sub_title: "",
@@ -22,7 +21,7 @@ const App = observer(() => {
                 under: ""
             }
         ])
-        // if (isAuthenticated()) {
+
 
             let handleChange = (i, e) => {
                 let newFormValues = [...formValues];
@@ -74,21 +73,16 @@ const App = observer(() => {
                 formValues.map((element, index) => {
 
                     // console.log("CargoName in html " + element.CargoName)
-
-                    if (element.title === "" ||
-                        element.sub_title === "" ||
-                        element.main_text === "" ||
-                        element.description === "" ||
-                        element.under === "" ||
-                        titleNew === "" ||
-                        underNew === "" ||
-                        descriptionNew === ""
+                    console.log(element.title.length)
+                    if (element.title.length < 6 ||
+                        element.main_text.length < 6 ||
+                        element.description.length < 6 ||
+                        titleNew.length < 6
                     ) {
                         check = 1
                     }
                 })
 
-                console.log("А ТУТ ГДЕ ОНА НАХУЙ???" + localStorage.getItem("id"))
                 if (check !== 0) {
                     alert("Уважемый пользователь!\n" +
                         "Длина, ширина, высота и вес должны быть равны минимум 1.\n" +
@@ -96,11 +90,11 @@ const App = observer(() => {
                         "Если выше перечисленные подсказки не дали результата, обратитесь к специалисту.")
                 } else {
                     event.preventDefault();
-                    addOrder(formValues, titleNew,
+                    addNew(formValues, titleNew,
                         descriptionNew, underNew,
                         uploadDate, endEvent, localStorage.getItem("id"))
-                        alert('Вы больше НИКОГДА НЕ УВИДИТЕ СВОЙ ГРУЗ... То есть, ой, мы его доставим!!!');
-                        window.location.replace('/');
+                    alert('Вы больше НИКОГДА НЕ УВИДИТЕ СВОЙ ГРУЗ... То есть, ой, мы его доставим!!!');
+                    window.location.replace('/');
                 }
             }
 
@@ -116,7 +110,7 @@ const App = observer(() => {
                                 <div className="card-body py-md-5">
                                     <div className="row justify-content-center">
                                         <div className="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
-                                            <p className="text-center h1 fw-bold mb-5 mt-4">Форма оформления груза</p>
+                                            <p className="text-center h1 fw-bold mb-5 mt-4">Создание новости</p>
 
                                             <form id="orderForm" onSubmit={handleSubmit}>
                                                 <div className="row mt-3">
@@ -125,15 +119,18 @@ const App = observer(() => {
                                                             Оглавление
                                                         </label>
                                                         <input className="form-control" type="text" id={"titleNew"}
-                                                               placeholder={"Оглавление"}
-                                                               name="titleNew"/>
+                                                               placeholder={"Название Вашей новости"}
+                                                               name="titleNew"
+                                                               required
+                                                        />
                                                     </div>
                                                     <div className="col text-left">
                                                         <label htmlFor="first" className="form-label col-form-label-lg">
                                                             Подоглавление
                                                         </label>
-                                                        <input className="form-control" type="text" id={"descriptionNew"}
-                                                               placeholder={"Москва..."}
+                                                        <input className="form-control" type="text"
+                                                               id={"descriptionNew"}
+                                                               placeholder={"Текст под новостью"}
                                                                name="descriptionNew"/>
                                                     </div>
                                                 </div>
@@ -151,47 +148,64 @@ const App = observer(() => {
                                                             <div key={index}>
                                                                 <div className="container">
                                                                     <div className="section-divider">
-                                                                        <span>Текст к новости</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="row">
-                                                                    <div className="col text-left">
-                                                                        <label htmlFor="first" className="form-label">Оглавление главы</label>
-                                                                        <input className="form-control" type="text"
-                                                                               name="title"
-                                                                               value={element.title || ""}
-                                                                               onChange={e => handleChange(index, e)}/>
-                                                                    </div>
-                                                                    <div className="col text-left">
-                                                                        <label htmlFor="first" className="form-label">Подоглавление</label>
-                                                                        <input className="form-control" type="text"
-                                                                               name="sub_title"
-                                                                               value={element.sub_title || ""}
-                                                                               onChange={e => handleChange(index, e)}/>
+                                                                        <span>Текст к новости </span>
                                                                     </div>
                                                                 </div>
 
                                                                 <div className="row">
                                                                     <div className="col text-left">
-                                                                        <label htmlFor="first" className="form-label">Основной текст</label>
+                                                                        <label htmlFor="first" className="form-label">Оглавление
+                                                                            главы</label>
+                                                                        <input className="form-control" type="text"
+                                                                               name="title"
+                                                                               value={element.title || ""}
+                                                                               onChange={e => handleChange(index, e)}
+                                                                               required
+                                                                        />
+                                                                    </div>
+                                                                    <div className="col text-left">
+                                                                        <label htmlFor="first"
+                                                                               className="form-label">Подоглавление</label>
+                                                                        <input className="form-control" type="text"
+                                                                               name="sub_title"
+                                                                               value={element.sub_title || ""}
+                                                                               onChange={e => handleChange(index, e)}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="row">
+                                                                    <div className="col text-left">
+                                                                        <label htmlFor="first" className="form-label">Основной
+                                                                            текст
+                                                                        </label>
                                                                         <input className="form-control" type="text"
                                                                                name="main_text"
                                                                                value={element.main_text || ""}
-                                                                               onChange={e => handleChange(index, e)}/>
+                                                                               onChange={e => handleChange(index, e)}
+                                                                               required
+                                                                        />
                                                                     </div>
+                                                                </div>
+                                                                <div className="row">
                                                                     <div className="col text-left">
-                                                                        <label htmlFor="first" className="form-label">Описание</label>
+                                                                        <label htmlFor="first"
+                                                                               className="form-label">Описание</label>
                                                                         <input className="form-control" type="text"
                                                                                name="description"
                                                                                value={element.description || ""}
-                                                                               onChange={e => handleChange(index, e)}/>
+                                                                               onChange={e => handleChange(index, e)}
+                                                                               required
+                                                                        />
                                                                     </div>
                                                                     <div className="col text-left">
-                                                                        <label htmlFor="first" className="form-label">Низ</label>
+                                                                        <label htmlFor="first"
+                                                                               className="form-label">Низ</label>
                                                                         <input className="form-control" type="text"
                                                                                name="under"
                                                                                value={element.under || ""}
-                                                                               onChange={e => handleChange(index, e)}/>
+                                                                               onChange={e => handleChange(index, e)}
+                                                                        />
                                                                     </div>
                                                                 </div>
                                                                 {
@@ -230,14 +244,6 @@ const App = observer(() => {
                                             </form>
 
                                         </div>
-                                        {/*<div*/}
-                                        {/*    className="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">*/}
-                                        {/*    <img*/}
-                                        {/*        src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"*/}
-                                        {/*        className="img-fluid"*/}
-                                        {/*        alt=""*/}
-                                        {/*    />*/}
-                                        {/*</div>*/}
                                     </div>
                                 </div>
                             </div>
@@ -245,9 +251,10 @@ const App = observer(() => {
                     </div>
                 </section>
             )
-        // } else {
-        //     window.location.replace("/")
-        // }
+        } else {
+            window.location.replace('/')
+        }
+
     }
 )
 

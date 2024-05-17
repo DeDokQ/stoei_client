@@ -30,7 +30,6 @@ const SignInForm = observer(() => {
                     }}
                     validationSchema={authorizationSchema}
                     onSubmit={(values, {setSubmitting}) => {
-
                         try {
                             let data = login(values.email, values.password)
 

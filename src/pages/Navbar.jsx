@@ -8,7 +8,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import {OffcanvasBody, OffcanvasTitle, OffcanvasToggling, Spinner} from "react-bootstrap";
 import {observer} from "mobx-react-lite";
 import {redirect} from "react-router-dom";
-import {getId, getName, getRole} from "../http/UserApi";
+import {getEmail, getId, getName, getRole} from "../http/UserApi";
 import {Row} from "primereact/row";
 import {useEffect, useState} from "react";
 import * as React from "react";
@@ -22,6 +22,13 @@ const exit = () => {
 const getUserName = () => {
     let token = localStorage.getItem("token")
     let data = getName(token)
+
+    return data
+}
+
+const getUserEmail = () => {
+    let token = localStorage.getItem("token")
+    let data = getEmail(token)
 
     return data
 }
@@ -58,6 +65,10 @@ const OffcanvasExample = observer(() => {
                             localStorage.setItem("role", dataRole)
                         }).finally(() => setLoading(false))
 
+                        getUserEmail().then(dataRole => {
+                            localStorage.setItem("email", dataRole)
+                        }).finally(() => setLoading(false))
+
                     }, 1000)
 
                 },
@@ -91,29 +102,28 @@ const OffcanvasExample = observer(() => {
                                             <OffcanvasToggling className="ps-md-5">
                                                 <Nav.Item className="ps-md-5">
                                                     <Row>
-                                                        <i>Авторизованы как </i> <b>{localStorage.getItem("name")}</b>
+                                                        <i>Авторизованы как  </i> <b>{localStorage.getItem("name")}</b>
                                                     </Row>
                                                 </Nav.Item>
                                             </OffcanvasToggling>
                                             <Offcanvas.Body>
                                                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                                                    {localStorage.getItem("role") === "ADMIN" ?
-                                                        <Nav.Link href="/adminPage" className={"text-center fw-bold"}>Админ панель</Nav.Link>
-                                                        :
-                                                        <div>
-
-                                                        </div>
-                                                    }
-                                                    <Nav.Link href="#action1">Профиль</Nav.Link>
-                                                    <Nav.Link href="#action2">Все поставщики</Nav.Link>
+                                                    <Nav.Link href="/profile">Профиль</Nav.Link>
                                                     <NavDropdown
                                                         title="Действия"
                                                         id={`offcanvasNavbarDropdown-expand-${expand}`}
                                                     >
-                                                        <NavDropdown.Item href="/orders/newOrder">Отправить
-                                                            груз</NavDropdown.Item>
-                                                        <NavDropdown.Item href="/orders/myOrders">Мои
-                                                            отправки</NavDropdown.Item>
+                                                        {localStorage.getItem("role") === "ADMIN" ?
+                                                            <div>
+                                                                <Nav.Link href="/admin/users" className={"text-center fw-bold"}>Админ панель</Nav.Link>
+                                                                <NavDropdown.Item href="/news/newNew">Написать новость</NavDropdown.Item>
+                                                            </div>
+                                                            :
+                                                            <div>
+
+                                                            </div>
+                                                        }
+                                                        <NavDropdown.Item href="/news/News">Новости</NavDropdown.Item>
                                                         <NavDropdown.Divider/>
                                                         <NavDropdown.Item href="/authorization" onClick={exit}>
                                                             Выйти с аккаунта

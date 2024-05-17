@@ -1,17 +1,16 @@
-import {getOrders} from "./http/OrderApi";
+import {getAllNews, getOrders} from "./http/OrderApi";
 
-export const exportMyOrders = async () => {
-    // let dataArray = [];
-    let data = await getOrders(localStorage.getItem("id"));
-
+export const exportMyNews = async () => {
+    let data = await getAllNews();
     let result = await data.json();
 
-    // result.forEach(nevs => {
-    //     nevs.newssubs.forEach(newssub => {
-    //         console.log(newssub);
-    //     })
-    // })
+    if (result.length === 0) {
+        console.log("ПИЗДА");
+        return "Пусто"
+    } else {
+        console.log("res ", result);
+        console.log("YT ПИЗДА");
+        return result;
+    }
 
-    return result;
-    // return dataArray;
 }

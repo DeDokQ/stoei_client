@@ -1,19 +1,37 @@
 import register from "./pages/Registration/reg"
 import auth from './pages/Authorization/authtest'
-import newOrder from './pages/Order/NewOrder'
-import myOrders from './pages/Order/myOrders'
-import React, {useEffect, useState} from "react";
-import {getOrders} from "./http/OrderApi";
-import {Spinner} from "react-bootstrap";
+import newNew from './pages/News/NewNew'
+import News from './pages/News/News'
 import mainPage from './pages/main'
 import NewPage from "./pages/News/NewPages";
-
-// export const authRoutes = [
-//     {
-//         path: ADMIN_ROUTE,
-//         Component: Admin
-//     }
-// ]
+import editNew from "./pages/News/editNew";
+import editNewText from "./pages/News/editNewText";
+import test from "./public/mainPage/test"
+import profile from './pages/Profile/MyProfile'
+import usersPage from './pages/Admin/usersPage'
+import userEditor from './pages/Admin/editUser'
+export const authRoutes = [
+    {
+        path: '/news/newNew',
+        Component: newNew
+    },
+    {
+        path: '/news/edit/:id',
+        Component: editNew
+    },
+    {
+        path: '/news/editText/:id',
+        Component: editNewText
+    },
+    {
+        path: '/admin/users',
+        Component: usersPage
+    },
+    {
+        path: '/admin/users/edit/:id',
+        Component: userEditor
+    }
+]
 export const publicRoutes = [
     {
         path: '/registration',
@@ -24,20 +42,20 @@ export const publicRoutes = [
         Component: auth
     },
     {
-        path: '/orders/newOrder',
-        Component: newOrder
-    },
-    {
-        path: '/orders/myOrders',
-        Component: myOrders
-    },
-    {
-        path: '/',
-        Component: mainPage
+        path: '/news/News',
+        Component: News
     },
     {
         path: '/news/:id',
         Component: NewPage
+    },
+    {
+        path: '/',
+        Component: test
+    },
+    {
+        path: '/profile',
+        Component: profile
     }
 
 ]
